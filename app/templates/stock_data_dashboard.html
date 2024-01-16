@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Data</title>
+    <link rel="stylesheet" href="/static/css/table_styles.css" />
+</head>
+<body>
+    <main class="table">
+        <section class="table__header">
+            <h1>Stock Data</h1>
+            <div class="input-group">
+                <input type="search" placeholder="Search Data...">
+                <img src="static/images/search.png" alt="">
+            </div>
+        </section>
+        <section class="table__body">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trade Code</th>
+                        <th>Date</th>
+                        <th>Open</th>
+                        <th>High</th>
+                        <th>Low</th>
+                        <th>Close</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in stock_data %}
+                        <tr>
+                            <td>{{ data.trade_code }}</td>
+                            <td>{{ data.date }}</td>
+                            <td>{{ data.open }}</td>
+                            <td>{{ data.high }}</td>
+                            <td>{{ data.low }}</td>
+                            <td>{{ data.close }}</td>
+                            <td>{{ data.volume }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
