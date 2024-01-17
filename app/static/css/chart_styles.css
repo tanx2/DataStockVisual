@@ -1,0 +1,12 @@
+.chart-container {
+    height: auto;
+    width: 800px;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    display: block;
+}
+#lineChart {
+    display: block;
+    margin: 0px;
+    padding: 0px;
+}

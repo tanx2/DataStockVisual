@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.template import loader, TemplateDoesNotExist
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
+from django.db.models import DecimalField
+from django.db.models.functions import Cast
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -44,6 +46,16 @@ def load_stock_data(request):
         stock_data = StockData.objects.all()
         print('Current total records:', stock_data.count())
         
+        # visualization utils
+        data = StockData.objects.order_by('date').values('date', 'close')
+
+        chart_data = []
+        
+        for entry in list(data):
+            chart_data.append({"date":entry['date'].isoformat(), "close":float(entry['close'])})
+      
+        chart_data_json = json.dumps(chart_data)
+        
     else:
         # If data does not already exist then load from json file
         try:
@@ -63,7 +75,6 @@ def load_stock_data(request):
             try:
                 try:
                     StockData.objects.create(
-                        
                         trade_code=item['trade_code'],
                         date=datetime.strptime(item['date'], '%Y-%m-%d').date(),
                         open=float(item['open']),
@@ -87,22 +98,30 @@ def load_stock_data(request):
         template = loader.get_template('stock_data_dashboard.html')
         # Raise TemplateDoesNotExist exception with an empty template name ('').
         # If everything is functioning correctly, send data to the template and display it.
-        return HttpResponse(template.render({'stock_data': stock_data}, request))
+        return HttpResponse(template.render({'stock_data': stock_data, 'chart_data': chart_data_json}, request))
     except TemplateDoesNotExist:
         # Handle data TemplateDoesNotExist error
         return error_handler("Please check the path.", request)
 
 @csrf_exempt
 def update_model(request):
+    print('i am here')
     if request.method == 'POST':
         data = request.POST.get('data')
+        
         data_dict = json.loads(data)
-
+        print('#########################', data_dict)
         # Extract relevant information from the data object
         record_id = data_dict.get('id')
         trade_code = data_dict.get('trade_code')
         date_str = data_dict.get('date')
-        date = datetime.strptime(date_str, '%b. %d, %Y').strftime('%Y-%m-%d')
+        try:
+            date = datetime.strptime(date_str, '%b. %d, %Y').strftime('%Y-%m-%d')
+            print('###################No error##############################')
+        except ValueError:
+            date = datetime.strptime(date_str, '%B %d, %Y').strftime('%Y-%m-%d')
+            print('###################error##############################3')
+            
         open_value = float(data_dict.get('open'))
         high_value = float(data_dict.get('high'))
         low_value = float(data_dict.get('low'))
@@ -134,13 +153,8 @@ def update_model(request):
 
 @csrf_exempt
 def delete_model(request):
-    print('-------------before-------------------')
     if request.method == 'POST':
-        
-        
         id = request.POST.get('id')
-        
-        print('-----------------after---------------', id)
         try:
             # Assuming your model is named StockData
             stock_data = StockData.objects.get(id=id)
@@ -150,5 +164,4 @@ def delete_model(request):
         except StockData.DoesNotExist:
             return JsonResponse({'error': 'Model not found'}, status=404)
 
-    return JsonResponse({'message': 'Model deleted successfully'})
-# JsonResponse({'error': 'Invalid request'}, status=400)
+    JsonResponse({'error': 'Invalid request'}, status=400)

@@ -1,5 +1,8 @@
+console.log('sdfsdfdffsf')
+
+
 function deleteRow(button) {
-  console.log('delete function')
+  console.log("delete function");
   var row = button.parentNode.parentNode;
   var id = row.getAttribute("data-id");
 
@@ -21,12 +24,13 @@ function deleteModel(id) {
       "X-CSRFToken": csrfToken,
     },
     success: function (response) {
-      console.log("Model deleted successfully:", response);
+      updateStatus("Model deleted successfully", "success");
 
       // Remove the row from the table upon successful deletion
       $("tr[data-id=" + id + "]").remove();
     },
     error: function (error) {
+      updateStatus("Model was not deleted.", "error");
       console.error("Error deleting model:", error);
     },
   });
@@ -38,28 +42,33 @@ function editRow(button) {
   var cells = row.getElementsByTagName("td");
   var id = row.getAttribute("data-id");
 
-  console.log("id is", id);
-
-  for (var i = 0; i < cells.length - 1; i++) {
+  for (var i = 0; i < cells.length - 2; i++) {
     // Exclude the last cell with the "Edit" button
     var cell = cells[i];
     var cellValue = cell.innerText;
 
     // Replace td content with input field
-    cell.innerHTML = '<input type="text" value="' + cellValue + '">';
-  }
+    
+    cell.innerHTML = '<input type="text" style="max-width: 80px; padding: 5px;" value="' + cellValue + '">';
 
+  }
   // Replace "Edit" button with "Save" button
-  var editButton = row.querySelector("button");
+  var buttonId = "#button" + id;
+  var editButton = row.querySelector(buttonId);
+  console.log("button name", "button" + id);
+  console.log(editButton);
   editButton.innerText = "Save";
+  editButton.classList.remove("button-x");
+  editButton.classList.add("button-3");
   editButton.onclick = function () {
-    saveRow(this);
+    saveRow(this, buttonId);
   };
 }
 
-function saveRow(button) {
+function saveRow(button, buttonId) {
   var row = button.parentNode.parentNode;
   var cells = row.getElementsByTagName("td");
+  console.log("🚀 ~ saveRow ~ cells:", cells)
   var dataToUpdate = {};
   var id = button.getAttribute("data-id");
   var columnName = [
@@ -73,10 +82,11 @@ function saveRow(button) {
     "volume",
   ];
 
-  for (var i = 0; i < cells.length - 1; i++) {
+  for (var i = 0; i < cells.length - 2; i++) {
     // Exclude the last cell with the "Save" button
-    console.log("cell", cell);
+    
     var cell = cells[i];
+    console.log("cell", cell);
     var input = cell.querySelector("input");
     var inputValue = input.value;
 
@@ -84,20 +94,38 @@ function saveRow(button) {
     cell.innerText = inputValue;
 
     dataToUpdate[columnName[i]] = inputValue;
-  }
+    
 
-  // Replace "Save" button with "Edit" button
-  var saveButton = row.querySelector("button");
+  }
+  console.log("🚀 ~ saveRow ~ dataToUpdate:", dataToUpdate)
+
+  var saveButton = row.querySelector(buttonId);
   saveButton.innerText = "Edit";
+  saveButton.classList.remove("button-3");
+  saveButton.classList.add("button-x");
   saveButton.onclick = function () {
     editRow(this);
   };
-
   // Make AJAX request to update the model
   updateModel(dataToUpdate);
 }
 
+function updateStatus(Message, type){
+  var requestStatus = document.querySelector("#crud-status");
+  if(type == "success")
+    requestStatus.innerHTML = '<img id="status-img" src="static/images/green-tick.png" alt=""><span style="color:green">'+Message+'</span>';
+  else
+    requestStatus.innerHTML = '<img id="status-img" src="static/images/red-cross.png" alt=""><span style="color:red">' + Message + "</span>";
+  // Show the message for 3 seconds (adjust the time as needed)
+  setTimeout(function () {
+    requestStatus.innerText = "";
+  }, 5000); // 3000 milliseconds = 3 seconds
+  alert(Message);
+}
+
 function updateModel(dataToUpdate) {
+  console.log("🚀 ~ updateModel ~ dataToUpdate:", dataToUpdate)
+
   // Get the CSRF token from the HTML form
   var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
   console.log("csrfToken", csrfToken);
@@ -114,9 +142,12 @@ function updateModel(dataToUpdate) {
     },
     success: function (response) {
       console.log("Model updated successfully:", response);
+      updateStatus('Model updated successfully', 'success');
+      
     },
     error: function (error) {
       console.error("Error updating model:", error);
+      updateStatus("Model was not updated! Check the inputs.", "error");
     },
   });
 }
