@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader, TemplateDoesNotExist
 from django.db.utils import IntegrityError
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 import json
 from datetime import datetime
@@ -53,11 +56,14 @@ def load_stock_data(request):
         except json.JSONDecodeError:
             # Handle JSON decoding error
             return error_handler('Server module is not available at this moment.', request)
-        
+        i = 0
         for item in data:
+            print(i)
+            i = i + 1
             try:
                 try:
                     StockData.objects.create(
+                        
                         trade_code=item['trade_code'],
                         date=datetime.strptime(item['date'], '%Y-%m-%d').date(),
                         open=float(item['open']),
@@ -74,7 +80,7 @@ def load_stock_data(request):
                 print('We are currently addressing a technical issue and regret to inform you that data display is temporarily unavailable; our team is working diligently to resolve this matter promptly.')
             except ValueError:
                 # Handle data conversion error
-               return error_handler("Server-side error. Contact ", request)
+               return error_handler("Server-side error. You can contact us through phone number or email address given below.", request)
                     
     template = loader.get_template('stock_data_dashboard.html')
     try:
@@ -86,3 +92,42 @@ def load_stock_data(request):
         # Handle data TemplateDoesNotExist error
         return error_handler("Please check the path.", request)
 
+@csrf_exempt
+def update_model(request):
+    if request.method == 'POST':
+        data = request.POST.get('data')
+        data_dict = json.loads(data)
+
+        # Extract relevant information from the data object
+        record_id = data_dict.get('id')
+        trade_code = data_dict.get('trade_code')
+        date_str = data_dict.get('date')
+        date = datetime.strptime(date_str, '%b. %d, %Y').strftime('%Y-%m-%d')
+        open_value = float(data_dict.get('open'))
+        high_value = float(data_dict.get('high'))
+        low_value = float(data_dict.get('low'))
+        close_value = float(data_dict.get('close'))
+        volume_value = int(data_dict.get('volume').replace(',', ''))
+
+        try:
+            # Get the record from the database
+            record = StockData.objects.get(id=record_id)
+
+            # Update the record with the new values
+            record.trade_code = trade_code
+            record.date = date
+            record.open = open_value
+            record.high = high_value
+            record.low = low_value
+            record.close = close_value
+            record.volume = volume_value
+
+            # Save the changes
+            record.save()
+
+            return JsonResponse({'status': 'success', 'message': 'Record updated successfully'})
+
+        except StockData.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Record not found'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
