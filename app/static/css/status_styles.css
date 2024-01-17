@@ -1,0 +1,21 @@
+#crud-status {
+    position: fixed;
+    margin-bottom: 0px;
+    bottom: 0px;
+    z-index: 5;
+    font-size: 1.2em;
+}
+
+#crud-status-dashboard {
+    position: fixed;
+    margin-bottom: 0px;
+    right: 10%;
+    bottom: 15px;
+    z-index: 5;
+}
+
+#status-img{
+    height: 12px;
+    width: 12px;
+    margin-right: 5px;
+}

@@ -1,14 +1,12 @@
 <!DOCTYPE html>
     <html lang="en">
     <head>
+        <title>Responsive 404 website</title>
+
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
-
         <link rel="stylesheet" href="static/css/error.css">
-
-        <title>Responsive 404 website - Bedimcode</title>
     </head>
     <body>
         <header class="header">
@@ -31,7 +29,6 @@
                         <p class="home__description">
                             We can't seem to find the page <br> you are looking for.
                             {{ message }}
-
                         </p>
                         <a href="#" class="home__button">
                             Go Home
@@ -52,8 +49,7 @@
             </section>
         </main>
 
-        <script src="assets/js/scrollreveal.min.js"></script>
-
-        <script src="assets/js/main.js"></script>
+        {% comment %} <script src="assets/js/scrollreveal.min.js"></script>
+        <script src="assets/js/main.js"></script> {% endcomment %}
     </body>
 </html>

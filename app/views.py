@@ -110,17 +110,14 @@ def update_model(request):
         data = request.POST.get('data')
         
         data_dict = json.loads(data)
-        print('#########################', data_dict)
         # Extract relevant information from the data object
         record_id = data_dict.get('id')
         trade_code = data_dict.get('trade_code')
         date_str = data_dict.get('date')
         try:
             date = datetime.strptime(date_str, '%b. %d, %Y').strftime('%Y-%m-%d')
-            print('###################No error##############################')
         except ValueError:
             date = datetime.strptime(date_str, '%B %d, %Y').strftime('%Y-%m-%d')
-            print('###################error##############################3')
             
         open_value = float(data_dict.get('open'))
         high_value = float(data_dict.get('high'))
