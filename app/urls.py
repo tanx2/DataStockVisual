@@ -9,4 +9,5 @@ urlpatterns = [
     # Endpoint to load stock data from JSON
     path('', views.load_stock_data, name='Load Stock data'),
     path('update_model/', views.update_model, name='Update Row'),
+    path('delete_model/', views.delete_model, name='Update Row'),
 ]

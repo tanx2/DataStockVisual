@@ -1,4 +1,36 @@
+function deleteRow(button) {
+  console.log('delete function')
+  var row = button.parentNode.parentNode;
+  var id = row.getAttribute("data-id");
 
+  // Make AJAX request to delete the model
+  deleteModel(id);
+}
+
+function deleteModel(id) {
+  var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+  console.log("delete model", id);
+  $.ajax({
+    type: "POST",
+    url: "/delete_model/", // Replace with the actual URL for deleting the model
+    data: {
+      csrfmiddlewaretoken: csrfToken,
+      id: id,
+    },
+    headers: {
+      "X-CSRFToken": csrfToken,
+    },
+    success: function (response) {
+      console.log("Model deleted successfully:", response);
+
+      // Remove the row from the table upon successful deletion
+      $("tr[data-id=" + id + "]").remove();
+    },
+    error: function (error) {
+      console.error("Error deleting model:", error);
+    },
+  });
+}
 
 function editRow(button) {
   console.log("ldsfsf");
@@ -6,7 +38,7 @@ function editRow(button) {
   var cells = row.getElementsByTagName("td");
   var id = row.getAttribute("data-id");
 
-  console.log('id is', id)
+  console.log("id is", id);
 
   for (var i = 0; i < cells.length - 1; i++) {
     // Exclude the last cell with the "Edit" button
@@ -25,7 +57,6 @@ function editRow(button) {
   };
 }
 
-
 function saveRow(button) {
   var row = button.parentNode.parentNode;
   var cells = row.getElementsByTagName("td");
@@ -41,10 +72,10 @@ function saveRow(button) {
     "close",
     "volume",
   ];
-  
+
   for (var i = 0; i < cells.length - 1; i++) {
     // Exclude the last cell with the "Save" button
-    console.log('cell',cell)
+    console.log("cell", cell);
     var cell = cells[i];
     var input = cell.querySelector("input");
     var inputValue = input.value;
@@ -66,31 +97,29 @@ function saveRow(button) {
   updateModel(dataToUpdate);
 }
 
-
 function updateModel(dataToUpdate) {
-    // Get the CSRF token from the HTML form
-    var csrfToken = $('input[name=csrfmiddlewaretoken]').val();
-    console.log('csrfToken',csrfToken)
+  // Get the CSRF token from the HTML form
+  var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+  console.log("csrfToken", csrfToken);
 
-    $.ajax({
-        type: 'POST',
-        url: '/update_model/',  // Replace with the actual URL for updating the model
-        data: {
-            csrfmiddlewaretoken: csrfToken,
-            data: JSON.stringify(dataToUpdate),
-        },
-        headers: {
-            'X-CSRFToken': csrfToken,  // Include the CSRF token in the headers
-        },
-        success: function(response) {
-            console.log('Model updated successfully:', response);
-        },
-        error: function(error) {
-            console.error('Error updating model:', error);
-        }
-    });
+  $.ajax({
+    type: "POST",
+    url: "/update_model/", // Replace with the actual URL for updating the model
+    data: {
+      csrfmiddlewaretoken: csrfToken,
+      data: JSON.stringify(dataToUpdate),
+    },
+    headers: {
+      "X-CSRFToken": csrfToken, // Include the CSRF token in the headers
+    },
+    success: function (response) {
+      console.log("Model updated successfully:", response);
+    },
+    error: function (error) {
+      console.error("Error updating model:", error);
+    },
+  });
 }
-
 
 const search = document.querySelector(".input-group input"),
   table_rows = document.querySelectorAll("tbody tr"),

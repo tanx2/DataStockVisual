@@ -131,3 +131,24 @@ def update_model(request):
             return JsonResponse({'status': 'error', 'message': 'Record not found'})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+@csrf_exempt
+def delete_model(request):
+    print('-------------before-------------------')
+    if request.method == 'POST':
+        
+        
+        id = request.POST.get('id')
+        
+        print('-----------------after---------------', id)
+        try:
+            # Assuming your model is named StockData
+            stock_data = StockData.objects.get(id=id)
+            stock_data.delete()
+
+            return JsonResponse({'message': 'Model deleted successfully'})
+        except StockData.DoesNotExist:
+            return JsonResponse({'error': 'Model not found'}, status=404)
+
+    return JsonResponse({'message': 'Model deleted successfully'})
+# JsonResponse({'error': 'Invalid request'}, status=400)

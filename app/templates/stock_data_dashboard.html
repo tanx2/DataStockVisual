@@ -28,11 +28,14 @@
                         <th>Close</th>
                         <th>Volume</th>
                         <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for data in stock_data %}
                         <tr data-id="{{ data.id }}">
+                            <td><button onclick="editRow(this)">Edit</button></td>
+                            <td><button onclick="deleteRow(this)">Delete</button></td>
                             <td>{{ data.id }}</td>
                             <td>{{ data.trade_code }}</td>
                             <td>{{ data.date }}</td>
@@ -41,7 +44,7 @@
                             <td>{{ data.low }}</td>
                             <td>{{ data.close }}</td>
                             <td>{{ data.volume }}</td>
-                            <td><button onclick="editRow(this)">Edit</button></td>
+                            
                         </tr>
                     {% endfor %}
                 </tbody>
