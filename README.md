@@ -1,4 +1,4 @@
-For the first time only:: When you will run the project it will create records inside the database one by one so it may take some time. If it shows 404/Error page at any point press reload!
+For the first time only:: When you will run the project(sqlModel) it will create records inside the database one by one so it may take some time. If it shows 404/Error page at any point press reload!
 
 Challenges I faced:
 - The pythonanywhere had an issue connecting json to mysql due to some issue called json fixture.
