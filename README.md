@@ -11,3 +11,7 @@ What did I learn:
 - I learnt the ajax call which I did with Fetch or Axios in React
 - How the overall backend processes work
 - How backend can be connected to UI
+
+
+https://github.com/tanx2/DataStockVisual/assets/68131884/92365aa0-ff46-4bed-9a7f-3e8104e47803
+
