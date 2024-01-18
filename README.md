@@ -12,6 +12,7 @@ What did I learn:
 - How the overall backend processes work
 - How backend can be connected to UI
 
+https://github.com/tanx2/DataStockVisual/assets/68131884/108bae63-6907-4c60-91fa-e70fb21da6f2
 
-https://github.com/tanx2/DataStockVisual/assets/68131884/70d332c0-808c-49e2-a4f0-db29239500a1
+https://github.com/tanx2/DataStockVisual/assets/68131884/835f760c-b5cc-495c-b019-b917a435b058
 
