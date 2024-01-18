@@ -14,4 +14,4 @@ What did I learn:
 
 
 https://github.com/tanx2/DataStockVisual/assets/68131884/108bae63-6907-4c60-91fa-e70fb21da6f2
-
+https://github.com/tanx2/DataStockVisual/assets/68131884/835f760c-b5cc-495c-b019-b917a435b058
